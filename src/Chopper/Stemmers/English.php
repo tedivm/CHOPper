@@ -165,7 +165,7 @@ class English
         if(strpos($lastChar, '\'') === false)
             return $word;
 
-        if($lastThree == '\'s\'')
+        if($lastChar == '\'s\'')
         {
             $word = substr($word, 0, strlen($word) - 3);
         }elseif($endLength >= 2 && substr($word, -2) == '\'s'){
