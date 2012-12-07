@@ -11,6 +11,7 @@
 
 define('TESTING', true);
 error_reporting(-1);
+ini_set("auto_detect_line_endings", true);
 
 $filename = __DIR__ .'/../vendor/autoload.php';
 
@@ -19,4 +20,3 @@ if (!file_exists($filename)) {
 }
 
 require_once $filename;
-
