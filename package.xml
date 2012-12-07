@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
+ <name>CHOPper</name>
+ <channel>pear.tedivm.com</channel>
+ <summary>Stemming library for PHP</summary>
+ <description>Stemming library for PHP</description>
+ <lead>
+  <name>Robert Hafner</name>
+  <user>tedivm</user>
+  <email>tedivm@tedivm.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2012-12-06</date>
+ <time>17:57:22</time>
+ <version>
+  <release>0.1.1</release>
+  <api>0.1.1</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+ <notes>
+-
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="14540c4f604f3c49520e664cd76273d5" name="tests/bootstrap.php" role="test" />
+   <file baseinstalldir="/" md5sum="606a7828ea9c86580112a5838f38cdc5" name="autoload.php" role="php" />
+   <file baseinstalldir="/" md5sum="004cb1839de85923c6ddd8571e84272c" name="composer.json" role="data" />
+   <file baseinstalldir="/" md5sum="4820e7a8d7a703398d6c7a06dea22cc6" name="LICENSE" role="doc" />
+   <file baseinstalldir="/" md5sum="adbe56befd1f035fe06509ccd0d807ce" name="phpunit.xml.dist" role="data" />
+   <file baseinstalldir="/" md5sum="3e84060b69ca57877edf33e11bc57cf8" name="README.md" role="data" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.1.1</release>
+    <api>0.1.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-12-06</date>
+   <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+   <notes>
+-
+   </notes>
+  </release>
+ </changelog>
+</package>
