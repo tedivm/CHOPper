@@ -28,6 +28,7 @@ abstract class AbstractStemmerTest extends \PHPUnit_Framework_TestCase
     public function testDictionary()
     {
         $testClass = $this->class;
+        $stemmer = new $testClass();
         $dataDir = __DIR__ . '/Data/';
 
         $input = $dataDir . $this->language . '_input.txt';
@@ -49,7 +50,7 @@ abstract class AbstractStemmerTest extends \PHPUnit_Framework_TestCase
         while(($test = fgets($fin)) && ($output = fgets($fout)))
         {
             $line++;
-            $result = $testClass::stem($test);
+            $result = $stemmer->stem($test);
 
             $this->assertEquals($output, $result,
                 "{$this->language} Stemmer does not give expected results. \n" .

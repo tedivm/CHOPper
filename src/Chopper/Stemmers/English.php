@@ -12,9 +12,9 @@ namespace Chopper\Stemmers;
  */
 class English
 {
-    static protected $invariantForms = array( 'sky', 'news', 'howe', 'atlas', 'cosmos', 'bias', 'andes');
+    protected $invariantForms = array( 'sky', 'news', 'howe', 'atlas', 'cosmos', 'bias', 'andes');
 
-    static protected $exceptions = array('skis' => 'ski',
+    protected $exceptions = array('skis' => 'ski',
         'skies'  => 'sky',
         'dying'  => 'die',
         'lying'  => 'lie',
@@ -26,14 +26,14 @@ class English
         'only'   => 'onli',
         'singly' => 'singl');
 
-    static protected $secondLevelExceptions = array('inning',
+    protected $secondLevelExceptions = array('inning',
         'outing', 'canning', 'herring','earring', 'proceed', 'exceed', 'succeed');
 
-    static protected $segmentExceptions = array('gener', 'commun', 'arsen');
+    protected $segmentExceptions = array('gener', 'commun', 'arsen');
 
-    static private $segmentCache = array();
+    private $segmentCache = array();
 
-    static protected $step1Brules = array(
+    protected $step1Brules = array(
         'ingly' => 2,
         'eedly' => 1,
         'edly'  => 2,
@@ -41,7 +41,7 @@ class English
         'ing'   => 2,
         'ed'    => 2);
 
-    static protected $step2rules = array(
+    protected $step2rules = array(
         'ization' => 'ize',
         'ousness' => 'ous',
         'iveness' => 'ive',
@@ -65,7 +65,7 @@ class English
         'alli'    => 'al',
         'bli'     => 'ble');
 
-    static protected $step3rules = array(
+    protected $step3rules = array(
         'ational' => 'ate',
         'tional'  => 'tion',
         'ative'   => true,
@@ -76,7 +76,7 @@ class English
         'ness'    => false,
         'ful'     => false);
 
-    static protected $step4Tests = array(
+    protected $step4Tests = array(
         'ement',
         'ance',
         'ence',
@@ -102,58 +102,58 @@ class English
      * @param string $word
      * @return string
      */
-    static public function stem($word)
+    public function stem($word)
     {
         if(strlen($word) <= 2)
             return $word;
 
         $word = strtolower($word);
 
-        if($value = self::firstException($word))
+        if($value = $this->firstException($word))
             return $value;
 
-        self::$segmentCache = array();
-        $word = self::markVowels($word);
-        $word = self::step0($word);
-        $word = self::step1a($word);
+        $this->segmentCache = array();
+        $word = $this->markVowels($word);
+        $word = $this->step0($word);
+        $word = $this->step1a($word);
 
-        if($value = self::secondException($word))
+        if($value = $this->secondException($word))
         {
             $word = $value;
         }else{
 
-            $word = self::step1b($word);
-            $word = self::step1c($word);
-            $word = self::step2($word);
-            $word = self::step3($word);
-            $word = self::step4($word);
-            $word = self::step5($word);
+            $word = $this->step1b($word);
+            $word = $this->step1c($word);
+            $word = $this->step2($word);
+            $word = $this->step3($word);
+            $word = $this->step4($word);
+            $word = $this->step5($word);
         }
         $word = str_replace('Y', 'y', $word);
-        self::$segmentCache = array();
+        $this->segmentCache = array();
         return $word;
     }
 
-    static protected function firstException($word)
+    protected function firstException($word)
     {
-        if(in_array($word, self::$invariantForms))
+        if(in_array($word, $this->invariantForms))
             return $word;
 
-        if(isset(self::$exceptions[$word]))
-            return self::$exceptions[$word];
+        if(isset($this->exceptions[$word]))
+            return $this->exceptions[$word];
 
         return false;
     }
 
-    static protected function secondException($word)
+    protected function secondException($word)
     {
-        if(in_array($word, self::$secondLevelExceptions))
+        if(in_array($word, $this->secondLevelExceptions))
             return $word;
 
         return false;
     }
 
-    static protected function step0($word)
+    protected function step0($word)
     {
         if(strpos($word, '\'') === 0)
             $word = substr($word, 1);
@@ -177,7 +177,7 @@ class English
         return $word;
     }
 
-    static protected function step1a($word)
+    protected function step1a($word)
     {
         $suffix = substr($word, -4);
         if($suffix == 'sses')
@@ -209,7 +209,7 @@ class English
         return $word;
     }
 
-    static protected function step1b($word)
+    protected function step1b($word)
     {
         $pieces = array();
 
@@ -221,14 +221,14 @@ class English
             if(!$pieces[$i])
                 continue;
 
-            if(isset(self::$step1Brules[$pieces[$i]]))
+            if(isset($this->step1Brules[$pieces[$i]]))
             {
-                $method = self::$step1Brules[$pieces[$i]];
+                $method = $this->step1Brules[$pieces[$i]];
                 $checkStringSize = $i;
 
                 if($method == 1)
                 {
-                    $segments = self::getSegments($word);
+                    $segments = $this->getSegments($word);
                     $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
                     if(strpos($r1, $pieces[$i]) !== false)
                     {
@@ -256,10 +256,10 @@ class English
                             return $newWord;
                         }
 
-                        $segments = self::getSegments($newWord);
+                        $segments = $this->getSegments($newWord);
                         $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
 
-                        if(self::isShort($newWord) && $r1 == ''){
+                        if($this->isShort($newWord) && $r1 == ''){
                             $newWord .= 'e';
                             return $newWord;
                         }
@@ -276,7 +276,7 @@ class English
         return $word;
     }
 
-    static protected function step1c($word)
+    protected function step1c($word)
     {
         $strlen = strlen($word);
 
@@ -291,7 +291,7 @@ class English
         return $word;
     }
 
-    static protected function step2($word)
+    protected function step2($word)
     {
         $pieces = array();
         for($i = 7; $i > 2; $i--)
@@ -302,12 +302,12 @@ class English
             if(!$pieces[$i])
                 continue;
 
-            if(isset(self::$step2rules[$pieces[$i]]))
+            if(isset($this->step2rules[$pieces[$i]]))
             {
-                $replacement = self::$step2rules[$pieces[$i]];
+                $replacement = $this->step2rules[$pieces[$i]];
                 $suffixSize = $i;
 
-                $segments = self::getSegments($word);
+                $segments = $this->getSegments($word);
                 $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
 
                 if(strpos($r1, $pieces[$i]) === false)
@@ -324,7 +324,7 @@ class English
 
         if($pieces[3] == 'ogi')
         {
-            $segments = self::getSegments($word);
+            $segments = $this->getSegments($word);
             $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
 
             if(strpos($r1, 'ogi') === false)
@@ -343,7 +343,7 @@ class English
 
         if($pieces[2] == 'li')
         {
-            $segments = self::getSegments($word);
+            $segments = $this->getSegments($word);
             $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
 
             if(strpos($r1, 'li') === false)
@@ -358,7 +358,7 @@ class English
         return $word;
     }
 
-    static protected function step3($word)
+    protected function step3($word)
     {
         $pieces = array();
         for($i = 7; $i > 2; $i--)
@@ -369,12 +369,12 @@ class English
             if(!$pieces[$i])
                 continue;
 
-            if(isset(self::$step3rules[$pieces[$i]]))
+            if(isset($this->step3rules[$pieces[$i]]))
             {
-                $rule = self::$step3rules[$pieces[$i]];;
+                $rule = $this->step3rules[$pieces[$i]];;
                 $stringLen = $i;
 
-                $segments = self::getSegments($word);
+                $segments = $this->getSegments($word);
                 $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
                 $r2 = (isset($segments['r2'])) ? $segments['r2'] : '';
 
@@ -405,7 +405,7 @@ class English
         return $word;
     }
 
-    static protected function step4($word)
+    protected function step4($word)
     {
         $pieces = array();
         for($i = 5; $i > 1; $i--)
@@ -416,9 +416,9 @@ class English
             if(!$pieces[$i])
                 continue;
 
-            if(in_array($pieces[$i], self::$step4Tests))
+            if(in_array($pieces[$i], $this->step4Tests))
             {
-                $segments = self::getSegments($word);
+                $segments = $this->getSegments($word);
                 $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
                 $r2 = (isset($segments['r2'])) ? $segments['r2'] : '';
 
@@ -445,12 +445,12 @@ class English
         return $word;
     }
 
-    static protected function step5($word)
+    protected function step5($word)
     {
         $lastChar = substr($word, -1);
         if($lastChar == 'e')
         {
-            $segments = self::getSegments($word);
+            $segments = $this->getSegments($word);
             $r1 = (isset($segments['r1'])) ? $segments['r1'] : '';
             $r2 = (isset($segments['r2'])) ? $segments['r2'] : '';
 
@@ -463,7 +463,7 @@ class English
                 {
                     $subString = substr($word, 0, strlen($word) - 1);
 
-                    if(!self::isShort($subString))
+                    if(!$this->isShort($subString))
                         return $subString;
                 }
                 return $word;
@@ -472,7 +472,7 @@ class English
 
         }elseif($lastChar == 'l'){
 
-            $segments = self::getSegments($word);
+            $segments = $this->getSegments($word);
             $r2 = (isset($segments['r2'])) ? $segments['r2'] : '';
 
             if(strpos($r2, 'l') !== false && substr($word, -2, 1) == 'l')
@@ -481,7 +481,7 @@ class English
         return $word;
     }
 
-    static protected function markVowels($word)
+    protected function markVowels($word)
     {
         $chars = str_split($word);
 
@@ -498,21 +498,21 @@ class English
         return $word;
     }
 
-    static protected function getSegments($word)
+    protected function getSegments($word)
     {
-        if(isset(self::$segmentCache[$word]))
-            return self::$segmentCache[$word];
+        if(isset($this->segmentCache[$word]))
+            return $this->segmentCache[$word];
 
         $realWord = $word;
         $output = array();
 
-        foreach(self::$segmentExceptions as $exception)
+        foreach($this->segmentExceptions as $exception)
         {
             if(strpos($word, $exception) === 0)
             {
                 if($word === $exception)
                 {
-                    self::$segmentCache[$word] = array();
+                    $this->segmentCache[$word] = array();
                     return array();
                 }
 
@@ -564,7 +564,7 @@ class English
         return $output;
     }
 
-    static protected function isShort($word)
+    protected function isShort($word)
     {
         $searchString = "#[aeiouy]#";
         $sortString = str_split($word);
