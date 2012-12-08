@@ -153,6 +153,13 @@ class English
         return false;
     }
 
+    /**
+     * This step searched for the longest suffix amongst the following and
+     * removes it.
+     * * '
+     * * 's
+     * * 's'
+     */
     protected function step0($word)
     {
         if(strpos($word, '\'') === 0)
@@ -177,6 +184,20 @@ class English
         return $word;
     }
 
+    /**
+     * Search for the longest suffix and perform the specified action
+     *
+     * * sses
+     * * * Replace by ss
+     *
+     * * ied+ ies*
+     * * * Replace by i if preceded by more than one letter, otherwise replace
+     * * * with ie (ties -> tie, cries -> cri)
+     *
+     * * s
+     * * * Delete if preceding word contains a vowel not immediately before the
+     * * * s (gas -> gas, this -> this, gaps -> gap, kiwis -> kiwi)
+     */
     protected function step1a($word)
     {
         $suffix = substr($word, -4);
@@ -209,6 +230,24 @@ class English
         return $word;
     }
 
+    /**
+     * Search for the longest suffix and perform the specified action
+     *
+     * * eed eedly+
+     * * replace by ee if in R1
+     *
+     * * ed edly+ ing ingly
+     * * Delete if preceding part contains a vowel, then do the following-
+     * *
+     * * * at bl iz
+     * * * Add e (luxuriat -> luxuriate)
+     * *
+     * * * double
+     * * * remove last letter (hopp -> hop)
+     * *
+     * * * short
+     * * * Add e (hop -> hope)
+     */
     protected function step1b($word)
     {
         $pieces = array();
@@ -276,6 +315,11 @@ class English
         return $word;
     }
 
+    /**
+     * Replace y and Y if preceding letter is not a vowel or the first letter
+     * of the word (cry -> cri, by -> by, say -> say)
+     *
+     */
     protected function step1c($word)
     {
         $strlen = strlen($word);
@@ -291,6 +335,18 @@ class English
         return $word;
     }
 
+    /**
+     * Search for the longest suffix in step2rules that's found in R1. In most
+     * places perform standard replacement, but in some special cases take a
+     * different actions.
+     *
+     * * ogi+
+     * * Replace by og it preceded by l
+     *
+     * * li+
+     * * Delete if preceded by a valid li ending
+     *
+     */
     protected function step2($word)
     {
         $pieces = array();
@@ -358,6 +414,17 @@ class English
         return $word;
     }
 
+    /**
+     * Search for the longest suffix in step3rules that's found in R1. In most
+     * places perform standard replacement, but in some special cases take a
+     * different actions.
+     *
+     * * ful ness
+     * * delete
+     *
+     * * active*
+     * *  delete if in R2
+     */
     protected function step3($word)
     {
         $pieces = array();
@@ -405,6 +472,13 @@ class English
         return $word;
     }
 
+    /**
+     * Search for the longest suffix in step4rules that's found in R1. In most
+     * places delete the suffix, but perform additional checks if it is "ion"
+     *
+     * * ion
+     * * delete if preceded by s or t
+     */
     protected function step4($word)
     {
         $pieces = array();
@@ -445,6 +519,15 @@ class English
         return $word;
     }
 
+    /**
+     * Clean up some final suffixes
+     *
+     * * e
+     * * Delete if in R2, or in R1 and not preceded by a short syllable.
+     *
+     * * l
+     * * delete if in R2 and preceded by L
+     */
     protected function step5($word)
     {
         $lastChar = substr($word, -1);
@@ -481,6 +564,10 @@ class English
         return $word;
     }
 
+    /**
+     * Converts some Y charactors to upper case to signify that it's a consonent
+     * and not a vowel.
+     */
     protected function markVowels($word)
     {
         $chars = str_split($word);
@@ -498,6 +585,16 @@ class English
         return $word;
     }
 
+    /**
+     * Get the segments of a word, divided up into R1 and R2.
+     *
+     * * R1 is the region after the first non-vowel following a vowel, or is the
+     * * null region at the end of the word if there is no such non-vowel.
+     *
+     * * R2 is the region after the first non-vowel following a vowel in R1, or
+     * * is the null region at the end of the word if there is no such
+     * * non-vowel.
+     */
     protected function getSegments($word)
     {
         if(isset($this->segmentCache[$word]))
@@ -564,6 +661,12 @@ class English
         return $output;
     }
 
+    /**
+     * A word is called short if it ends in a short syllable, and if R1 is null.
+     *
+     * * Short - bed, shed, shred
+     * * Long - bead, embed, beds
+     */
     protected function isShort($word)
     {
         $searchString = "#[aeiouy]#";
@@ -585,7 +688,6 @@ class English
         }
 
         return false;
-
     }
 }
 
